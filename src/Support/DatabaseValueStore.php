@@ -13,7 +13,7 @@ class DatabaseValueStore extends ValueStore
      *
      * @return $this
      */
-    protected function setContent(array $values)
+    protected function setContent(array $values):static
     {
         DB::table('mailcoach_settings')->where('key', $this->fileName)->updateOrInsert([
             'key' => $this->fileName,
