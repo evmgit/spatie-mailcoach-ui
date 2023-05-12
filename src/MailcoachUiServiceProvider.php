@@ -113,13 +113,11 @@ class MailcoachUiServiceProvider extends ServiceProvider
         Route::mailgunFeedback('mailgun-feedback');
         Route::sendgridFeedback('sendgrid-feedback');
         Route::postmarkFeedback('postmark-feedback');
-        //Route::postalFeedback('postal-feedback');
+        Route::postalFeedback('postal-feedback');
 
         Route::macro('mailcoachUi', function (string $url = '') {
             Route::mailcoach($url);
             Route::mailcoachUnlayer('mailcoachUnlayer');
-            Route::mailcoachMarkdownEditor('mailcoachMarkdownEditor');
-            Route::mailcoachEditor('mailcoachEditor');
 
             Route::redirect($url, $url.'/'.config('mailcoach-ui.url_after_login') ?? 'campaigns');
 

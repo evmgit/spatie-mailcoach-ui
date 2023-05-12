@@ -15,8 +15,7 @@ class PostmarkConfigurationDriver extends MailConfigurationDriver
     {
         return [
             'default_from_mail' => 'required',
-            'timespan_in_seconds' => 'required|numeric|gte:1',
-            'mails_per_timespan' => 'required|numeric|gte:1',
+            'postmark_mails_per_second' => 'required|numeric|between:1,100',
             'postmark_token' => 'required',
             'postmark_signing_secret' => 'required',
             'message_stream' => ['nullable', 'string'],
@@ -27,11 +26,7 @@ class PostmarkConfigurationDriver extends MailConfigurationDriver
     {
         $this
             ->setDefaultFromEmail($config, $values['default_from_mail'] ?? '')
-            ->throttleNumberOfMailsPerSecond(
-                $config,
-                $values['mails_per_timespan'] ?? $values['postmark_mails_per_second'] ?? 5,
-                $values['timespan_in_seconds'] ?? 1,
-            );
+            ->throttleNumberOfMailsPerSecond($config, $values['postmark_mails_per_second'] ?? 5);
 
         $config->set('mail.mailers.mailcoach.transport', $this->name());
         $config->set('services.postmark', [

@@ -15,8 +15,7 @@ class SendgridConfigurationDriver extends MailConfigurationDriver
     {
         return [
             'default_from_mail' => 'required|email',
-            'timespan_in_seconds' => 'required|numeric|gte:1',
-            'mails_per_timespan' => 'required|numeric|gte:1',
+            'sendgrid_mails_per_second' => 'required|numeric|between:1,100',
             'sendgrid_api_key' => 'required',
             'sendgrid_signing_secret' => 'required',
         ];
@@ -26,11 +25,7 @@ class SendgridConfigurationDriver extends MailConfigurationDriver
     {
         $this
             ->setDefaultFromEmail($config, $values['default_from_mail'] ?? '')
-            ->throttleNumberOfMailsPerSecond(
-                $config,
-                $values['mails_per_timespan'] ?? $values['sendgrid_mails_per_second'] ?? 5,
-                $values['timespan_in_seconds'] ?? 1,
-            );
+            ->throttleNumberOfMailsPerSecond($config, $values['sendgrid_mails_per_second'] ?? 5);
 
         $config->set('mail.mailers.mailcoach.transport', 'smtp');
         $config->set('mail.mailers.mailcoach.host', 'smtp.sendgrid.net');

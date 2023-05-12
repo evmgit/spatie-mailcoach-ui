@@ -13,7 +13,7 @@ class UpdateEditorRequest extends FormRequest
         $editorConfigurationDriverRepository = new EditorConfigurationDriverRepository();
 
         return array_merge([
-            'editor' => ['required','bail',  Rule::in($editorConfigurationDriverRepository->getSupportedEditors()->map->label())],
+            'editor' => ['required','bail',  Rule::in($editorConfigurationDriverRepository->getSupportedEditors())],
         ], $this->getEditorSpecificValidationRules($editorConfigurationDriverRepository));
     }
 

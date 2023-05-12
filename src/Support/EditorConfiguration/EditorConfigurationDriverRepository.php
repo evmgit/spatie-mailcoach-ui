@@ -2,25 +2,28 @@
 
 namespace Spatie\MailcoachUi\Support\EditorConfiguration;
 
-use Illuminate\Support\Collection;
 use Spatie\MailcoachUi\Support\EditorConfiguration\Editors\EditorConfigurationDriver;
+use Spatie\MailcoachUi\Support\EditorConfiguration\Editors\MonacoEditorConfigurationDriver;
 use Spatie\MailcoachUi\Support\EditorConfiguration\Editors\TextareaEditorConfigurationDriver;
+use Spatie\MailcoachUi\Support\EditorConfiguration\Editors\UnlayerEditorConfigurationDriver;
 
 class EditorConfigurationDriverRepository
 {
-    /** @return Collection<EditorConfigurationDriver> */
-    public function getSupportedEditors(): Collection
+    protected array $editors = [
+        'Textarea' => TextareaEditorConfigurationDriver::class,
+        'Unlayer' => UnlayerEditorConfigurationDriver::class,
+        'Monaco' => MonacoEditorConfigurationDriver::class,
+    ];
+
+    public function getSupportedEditors(): array
     {
-        return collect(config('mailcoach-ui.editors'))
-            /** @var class-string<EditorConfigurationDriver> $editorConfigurationDriver */
-            ->map(function (string $editorConfigurationDriver) {
-                return resolve($editorConfigurationDriver);
-            });
+        return array_keys($this->editors);
     }
 
     public function getForEditor(string $editorLabel): EditorConfigurationDriver
     {
-        $configuredEditor = $this->getSupportedEditors()
+        $configuredEditor = collect($this->editors)
+            ->map(fn (string $editorClass) => app($editorClass))
             ->first(fn (EditorConfigurationDriver $editor) => $editor->label() === $editorLabel);
 
         return $configuredEditor ?? app(TextareaEditorConfigurationDriver::class);

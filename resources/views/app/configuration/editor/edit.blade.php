@@ -11,15 +11,21 @@
             :label="__('Editor')"
             name="editor"
             :value="$editorConfiguration->editor"
-            :options="$editorConfiguration->getEditorOptions()"
+            :options="$editorConfiguration->getAvailableEditors()"
             data-conditional="editor"
         />
 
-        @foreach(config('mailcoach-ui.editors') as $editor)
-            <div class="form-grid" data-conditional-editor="{{ (new $editor)->label() }}">
-                @includeIf($editor::settingsPartial())
-            </div>
-        @endforeach
+        <div class="form-grid" data-conditional-editor="Textarea">
+            @include('mailcoach-ui::app.configuration.editor.partials.textarea')
+        </div>
+
+        <div class="form-grid" data-conditional-editor="Unlayer">
+            @include('mailcoach-ui::app.configuration.editor.partials.unlayer')
+        </div>
+
+        <div class="form-grid" data-conditional-editor="Monaco">
+            @include('mailcoach-ui::app.configuration.editor.partials.monaco')
+        </div>
 
         <div class="form-buttons">
             <x-mailcoach::button :label="__('Save')"/>
